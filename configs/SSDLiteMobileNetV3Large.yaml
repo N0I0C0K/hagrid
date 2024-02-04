@@ -90,7 +90,7 @@ model:
     name: SSDLiteMobileNetV3Large
     pretrained: False
     pretrained_backbone: False
-    checkpoint: null
+    checkpoint: checkpoints/SSDLite_MobilenetV3_large.pth
 
 # Model optimizer params
 optimizer:

@@ -90,7 +90,7 @@ model:
     name: RetinaNet_ResNet50
     pretrained: False
     pretrained_backbone: False
-    checkpoint: null
+    checkpoint: checkpoints/RetinaNet_ResNet50.pth
 
 # Model optimizer params
 optimizer:
