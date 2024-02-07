@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Callable
 
 import torch
 from omegaconf import DictConfig
@@ -8,7 +8,7 @@ from models.model import HaGRIDModel
 
 
 class ClassifierModel(HaGRIDModel):
-    def __init__(self, model: nn.Module, **kwargs):
+    def __init__(self, model: Callable[[], nn.Module], **kwargs):
         """
         Parameters
         ----------

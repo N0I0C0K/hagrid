@@ -9,7 +9,7 @@ class HaGRIDModel:
     """
 
     def __init__(self):
-        self.hagrid_model = None
+        self.hagrid_model: nn.Module = None
         self.type = None
 
     def __call__(self, img: Tensor, targets: Dict = None) -> Tuple[Dict[str, Tensor], List[Dict[str, Tensor]]]:

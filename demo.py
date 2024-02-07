@@ -31,7 +31,7 @@ DEVICE = torch.device("cuda:0")
 
 class Demo:
     @staticmethod
-    def preprocess(img: np.ndarray, transform) -> Tuple[Tensor, Tuple[int, int], Tuple[int, int]]:
+    def preprocess(img: np.ndarray, transform: A.Compose) -> Tuple[Tensor, Tuple[int, int]]:
         """
         Preproc image for model input
         Parameters
@@ -55,13 +55,18 @@ class Demo:
         transform_config: DictConfig
             config with test transforms
         """
-        transforms_list = [getattr(A, key)(**params) for key, params in transform_config.items()]
+        transforms_list = [getattr(A, str(key))(**params) for key, params in transform_config.items()]
         transforms_list.append(ToTensorV2())
         return A.Compose(transforms_list)
 
     @staticmethod
     def run(
-        detector, transform, conf: DictConfig, num_hands: int = 2, threshold: float = 0.5, landmarks: bool = False
+        detector: torch.nn.Module,
+        transform: A.Compose,
+        conf: DictConfig,
+        num_hands: int = 2,
+        threshold: float = 0.5,
+        landmarks: bool = False,
     ) -> None:
         """
         Run detection model and draw bounding boxes on frame
@@ -91,6 +96,7 @@ class Demo:
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
         t1 = cnt = 0
+        start_t = time.time()
         while cap.isOpened():
             delta = time.time() - t1
             t1 = time.time()
@@ -137,7 +143,15 @@ class Demo:
                                 mp_drawing_styles.DrawingSpec(color=(255, 255, 255), thickness=1, circle_radius=1),
                             )
                 fps = 1 / delta
-                cv2.putText(frame, f"FPS: {fps :02.1f}, Frame: {cnt}", (30, 30), FONT, 1, COLOR, 2)
+                cv2.putText(
+                    frame,
+                    f"FPS: {fps :02.1f}, Frame: {cnt}, Avg: {cnt/(t1+0.01-start_t):.1f}",
+                    (30, 30),
+                    FONT,
+                    1,
+                    COLOR,
+                    2,
+                )
                 cnt += 1
 
                 cv2.imshow("Frame", frame)
